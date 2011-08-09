@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="utf-8" />
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script type="text/javascript" src="queue.js"></script>
+  <script type="text/javascript">
+
+  $(function() {
+  	
+  	var rq = new RequestQueue();
+
+  	// will be called 3 times
+  	rq.update(function(data, status) {
+  		console.log("Update", data, status, rq.status_percentage('success', 2,2))
+  	})
+
+  	// will be called once, at the end
+  	rq.complete(function(data) {
+  		console.log("Complete", data)
+  	})
+ 
+ 	// will not be called because of sleeps.php error
+  	rq.success(function(data) {
+  		console.log("Success", data)
+  	})
+
+  	// will be called once for sleeps.php
+  	rq.error(function(xhr) {
+  		console.log("error", xhr)
+  	})
+ 
+ 	// sleep.php just sleeps for one second and returns some toy JSON
+ 	// lack of sleeps.php causes error to be called
+  	rq.add($.getJSON("/sleeps.php"))
+	rq.add($.getJSON("/sleep.php"))
+  	rq.add($.getJSON("/sleep.php"))
+
+  })
+
+  </script>
+</head>
+<body />
+</html>
