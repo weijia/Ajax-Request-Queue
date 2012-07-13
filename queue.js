@@ -17,9 +17,9 @@
     RequestQueue.prototype.success = function(fn) {
       return this.cbs.success = fn;
     };
-    RequestQueue.prototype.succeeded = function(data, name) {
+    RequestQueue.prototype.succeeded = function(data, name, xhr) {
       if (this.count_total === this.count_success && this.cbs.success) {
-        return this.cbs.success(this.results);
+        return this.cbs.success(this.results, name, xhr);
       }
     };
     RequestQueue.prototype.complete = function(fn) {
@@ -120,9 +120,9 @@
       jq_xhr.complete(function(xhr, name) {
         return self.completed(xhr, name);
       });
-      jq_xhr.success(function(data, name) {
+      jq_xhr.success(function(data, name, xhr) {
         self.updated(data, name, true);
-        return self.succeeded(data, name);
+        return self.succeeded(data, name, xhr);
       });
       return jq_xhr.fail(function(xhr, name) {
         self.updated(xhr.responseText, name, false);
