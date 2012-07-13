@@ -16,9 +16,9 @@ class RequestQueue
 		@cbs.success = fn
 
 	# internally called, executes the success fn when all requests are successful
-	succeeded: (data, name) ->
+	succeeded: (data, name, xhr) ->
 		if @count_total == @count_success and @cbs.success
-			@cbs.success(@results)
+			@cbs.success(@results, name, xhr)
 
 
 	# takes a single function
@@ -104,7 +104,7 @@ class RequestQueue
 
 		self = @
 		jq_xhr.complete((xhr, name) -> self.completed(xhr, name))
-		jq_xhr.success((data, name) -> self.updated(data, name, true); self.succeeded(data, name))
+		jq_xhr.success((data, name, xhr) -> self.updated(data, name, true); self.succeeded(data, name, xhr))
 		jq_xhr.fail((xhr, name) -> self.updated(xhr.responseText, name, false); self.errored(xhr, name))
 
 this.RequestQueue = RequestQueue
