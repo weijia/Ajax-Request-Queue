@@ -33,7 +33,7 @@
     RequestQueue.prototype.update = function(fn) {
       return this.cbs.update = fn;
     };
-    RequestQueue.prototype.updated = function(data, name, succeeded) {
+    RequestQueue.prototype.updated = function(data, name, succeeded, xhr) {
       this.count_complete++;
       if (succeeded) {
         this.count_success++;
@@ -42,7 +42,7 @@
       }
       this.results.push(data);
       if (this.cbs.update) {
-        return this.cbs.update(data, this.status(), succeeded);
+        return this.cbs.update(data, this.status(), succeeded, xhr);
       }
     };
     RequestQueue.prototype.error = function(fn) {
@@ -121,11 +121,11 @@
         return self.completed(xhr, name);
       });
       jq_xhr.success(function(data, name, xhr) {
-        self.updated(data, name, true);
+        self.updated(data, name, true, xhr);
         return self.succeeded(data, name, xhr);
       });
       return jq_xhr.fail(function(xhr, name) {
-        self.updated(xhr.responseText, name, false);
+        self.updated(xhr.responseText, name, false, xhr);
         return self.errored(xhr, name);
       });
     };

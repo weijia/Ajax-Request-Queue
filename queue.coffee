@@ -40,7 +40,7 @@ class RequestQueue
 		@cbs.update = fn
 	
 	# internally called, executes the update fn when any request completes
-	updated: (data, name, succeeded) ->
+	updated: (data, name, succeeded, xhr) ->
 		@count_complete++
 
 		if succeeded
@@ -50,7 +50,7 @@ class RequestQueue
 
 		@results.push(data)
 		if @cbs.update
-			@cbs.update(data, @status(), succeeded)
+			@cbs.update(data, @status(), succeeded, xhr)
 
 	
 	# takes a single function
@@ -104,7 +104,7 @@ class RequestQueue
 
 		self = @
 		jq_xhr.complete((xhr, name) -> self.completed(xhr, name))
-		jq_xhr.success((data, name, xhr) -> self.updated(data, name, true); self.succeeded(data, name, xhr))
-		jq_xhr.fail((xhr, name) -> self.updated(xhr.responseText, name, false); self.errored(xhr, name))
+		jq_xhr.success((data, name, xhr) -> self.updated(data, name, true, xhr); self.succeeded(data, name, xhr))
+		jq_xhr.fail((xhr, name) -> self.updated(xhr.responseText, name, false, xhr); self.errored(xhr, name))
 
 this.RequestQueue = RequestQueue
